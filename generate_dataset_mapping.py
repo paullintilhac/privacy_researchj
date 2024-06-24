@@ -29,7 +29,8 @@ def get_matching_image_index(pil_img):
   print("minDist: " + str(minDist/(32*32*3)) + ", minDistIndex: " + str(minDistIndex))
   #print("minDistImage: " + str(minDistImg))  
   thisImg = Image.fromarray(minDistImg)
-  thisImg.save("image 1.jpeg")
+  print("writing new image 1")
+  thisImg.save("image_1.jpeg")
   return minDistIndex
 mappings = []
 for count,newImg in enumerate(train_1):
@@ -41,6 +42,7 @@ for count,newImg in enumerate(train_1):
     ind=get_matching_image_index(newImg)
     mappings.append(ind)
     print("ind: " +str(ind))
+    print("unique matches so far: " + str(len(set(mappings))) + " out of "+str(count+1))
     #print("new img: " + str(np.array(newImg)))
     
 np.save("mappings.npy",np.array(mappings))
