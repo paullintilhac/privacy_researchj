@@ -5,7 +5,7 @@ from PIL import Image
 import torch
 from scipy import stats
 
-train_1 = [a[0] for a in torchvision.datasets.CIFAR10('./tmp', train=True, download=True)][:1]
+train_1 = [a[0] for a in torchvision.datasets.CIFAR10('./tmp', train=True, download=True)]
 print("shape of train 1: " + str(len(train_1)))
 
 inputs = np.load( "exp/cifar10/x_train.npy")
