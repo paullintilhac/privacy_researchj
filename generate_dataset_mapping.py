@@ -3,6 +3,7 @@ import torchvision
 import numpy as np
 from PIL import Image
 import torch
+from scipy import stats
 
 train_1 = [a[0] for a in torchvision.datasets.CIFAR10('./tmp', train=True, download=True)][:1]
 print("shape of train 1: " + str(len(train_1)))
@@ -16,8 +17,15 @@ def get_matching_image_index(pil_img):
   minDistImg = None
   for i,o in enumerate(inputs):
     o = ((o+1)*127.5).astype(np.uint8)
+    absVals = np.absolute(o-img)
+    goodInds = np.where(absVals==0)
+    #print("goodInds: " + str(goodInds))
+    #dist = np.sum(np.absolute(o-img))
+    #mode = stats.mode(absVals,keepdims=True,axis=2)
+    goodLen = len(goodInds[0])
+    #print("goodLen: " + str(goodLen))
+    dist = 1-goodLen/(32*32*3)
     
-    dist = np.sum(np.absolute(o-img))
     if dist < minDist:
         minDist = dist
         minDistIndex = i
