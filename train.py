@@ -240,6 +240,16 @@ def get_data(seed):
 
     train = DataSet.from_arrays(xs, ys,
                                 augment_fn=aug)
+    features_placeholder = tf.placeholder(features.dtype, features.shape)
+    labels_placeholder = tf.placeholder(labels.dtype, labels.shape)
+
+    dataset = tf.data.Dataset.from_tensor_slices((features_placeholder, labels_placeholder))
+    # [Other transformations on `dataset`...]
+    dataset = ...
+    iterator = dataset.make_initializable_iterator()
+
+sess.run(iterator.initializer, feed_dict={features_placeholder: features,
+                                          labels_placeholder: labels})
     test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
     train = train.cache().shuffle(8192).repeat().parse().augment().batch(FLAGS.batch)
     train = train.nchw().one_hot(nclass).prefetch(16)
