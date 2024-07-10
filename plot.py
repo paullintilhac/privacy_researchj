@@ -54,6 +54,7 @@ def load_data(p):
 
     for root,ds,_ in os.walk(p):
         for f in ds:
+            print("f: " + str(f))
             if not f.startswith("experiment"): continue
             if not os.path.exists(os.path.join(root,f,"scores")): continue
             last_epoch = sorted(os.listdir(os.path.join(root,f,"scores")))
@@ -83,7 +84,7 @@ def generate_ours(keep, scores, check_keep, check_scores, in_size=100000, out_si
             print("keep[:,j]: "+str(keep[:,j]) +", scores[keep[:,j],j,:]: "+str(scores[keep[:,j],j,:]))
         dat_in.append(scores[keep[:,j],j,:])
         dat_out.append(scores[~keep[:,j],j,:])
-
+    print("dat in len: " + str(len(dat_in)) + ", dat_
     in_size = min(min(map(len,dat_in)), in_size)
     out_size = min(min(map(len,dat_out)), out_size)
     print("in size: " + str(in_size) + ", out size: " + str(out_size))
@@ -110,7 +111,8 @@ def generate_ours(keep, scores, check_keep, check_scores, in_size=100000, out_si
         pr_in = -scipy.stats.norm.logpdf(sc, mean_in, std_in+1e-30)
         pr_out = -scipy.stats.norm.logpdf(sc, mean_out, std_out+1e-30)
         score = pr_in-pr_out
-
+        if printcount==1:
+            print("score: " + str(score))
         prediction.extend(score.mean(1))
         answers.extend(ans)
 
