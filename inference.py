@@ -55,8 +55,8 @@ def main(argv):
                 thing.append(load(arch))
             return thing[0]
         return fn
-    xs_all = np.load(os.path.join(FLAGS.logdir,"x_train.npy"))[:FLAGS.dataset_size]
-    ys_all = np.load(os.path.join(FLAGS.logdir,"y_train.npy"))[:FLAGS.dataset_size]
+    xs_all = np.load(os.path.join(FLAGS.logdir,"x_train_new.npy"))[:FLAGS.dataset_size]
+    ys_all = np.load(os.path.join(FLAGS.logdir,"y_train_new.npy"))[:FLAGS.dataset_size]
    
     print("x_all shape: " + str(xs_all.size))
     print("xall length: " + str(len(xs_all)) + ", x_all[0] len: " + str(len(xs_all[0]))+", xall[0][0] len: " + str(len(xs_all[0][0])) + "len: " + str(len(xs_all[0][0][0])))
@@ -93,8 +93,10 @@ def main(argv):
                         shift=0, reflect=True, stride=1)
     print("FLAGS.logdir: " + str(FLAGS.logdir) + ", os.path.join(): " + str(os.path.join(FLAGS.logdir)))
     print("dirs: " + str(os.listdir(os.path.join(FLAGS.logdir))))
+    print("sorted dirs: " + str(sorted(os.listdir(os.path.join(FLAGS.logdir)))))
     for path in sorted(os.listdir(os.path.join(FLAGS.logdir))):
         print("path: " + str(path))
+        print("FLAGS.regex: "+str(FLAGS.regex))
         if re.search(FLAGS.regex, path) is None:
             print("Skipping from regex")
             continue

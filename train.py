@@ -20,7 +20,7 @@ import os
 import shutil
 from typing import Callable
 import json
-
+from PIL import Image
 import jax
 import jax.numpy as jn
 import numpy as np
@@ -62,6 +62,8 @@ class TrainLoop(objax.Module):
         self.params = EasyDict(kwargs)
 
     def train_step(self, summary: Summary, data: dict, progress: np.ndarray):
+        #print("image shape in training: " + str(data['image'].numpy().shape))
+        #print("image range: " + str(np.min(data['image'].numpy())) +"-"+str(np.max(data['image'].numpy())))
         kv = self.train_op(progress, data['image'].numpy(), data['label'].numpy())
         for k, v in kv.items():
             if jn.isnan(v):
@@ -95,8 +97,14 @@ class TrainLoop(objax.Module):
                 accuracy, total = 0, 0
                 if epoch%FLAGS.eval_steps == 0 and test is not None:
                     for data in test:
+                        #print("image shape: " + str(data['image'][0].numpy().shape))
+                        #Image.fromarray(np.transpose(data['image'][0].numpy(),(1,2,0))).save("test_img.jpeg")
+                        #print("image shape in test: " + str(data['image'].numpy().shape))
+                        #print("image range: " + str(np.min(data['image'].numpy())) +"-"+str(np.max(data['image'].numpy())))
                         total += data['image'].shape[0]
                         preds = np.argmax(self.predict(data['image'].numpy()), axis=1)
+                        #print("first pred: " + str(preds[0]))
+                        #print("true label: " + str(data['label'][0]))
                         accuracy += (preds == data['label'].numpy()).sum()
                     accuracy /= total
                     summary.scalar('eval/accuracy', 100 * accuracy)
@@ -199,8 +207,23 @@ def get_data(seed):
     DATA_DIR = '/dartfs/rc/lab/C/CybenkoG/TFDS'
     print("dataset name: " + str(FLAGS.dataset))
     if os.path.exists(os.path.join(FLAGS.logdir, "x_train.npy")):
-        inputs = np.load(os.path.join(FLAGS.logdir, "x_train.npy"))
-        labels = np.load(os.path.join(FLAGS.logdir, "y_train.npy"))
+        print("using old datasets")
+        inputs = np.load(os.path.join(FLAGS.logdir, "x_train_new.npy"))
+        labels = np.load(os.path.join(FLAGS.logdir, "y_train_new.npy"))
+        test_inputs = np.load(os.path.join(FLAGS.logdir, "x_test.npy"))
+        test_labels = np.load(os.path.join(FLAGS.logdir, "y_test.npy"))
+        inputs = inputs/127.5-1
+        test_inputs=test_inputs/127.5-1
+
+        #CIFAR_MEAN = [125.307, 122.961, 113.8575]
+        #CIFAR_STD = [51.5865, 50.847, 51.255]
+        print("inputs[:,:,:,0] shape: " + str(inputs[:,:,:,0].shape))
+        #inputs[:,:,:,0]=(inputs[:,:,:,0]-CIFAR_MEAN[0])/CIFAR_STD[0]
+        #inputs[:,:,:,1]=(inputs[:,:,:,1]-CIFAR_MEAN[1])/CIFAR_STD[1]
+        #inputs[:,:,:,2]=(inputs[:,:,:,2]-CIFAR_MEAN[2])/CIFAR_STD[2]
+        #test_inputs[:,:,:,0]=(test_inputs[:,:,:,0]-CIFAR_MEAN[0])/CIFAR_STD[0]
+        #test_inputs[:,:,:,1]=(test_inputs[:,:,:,1]-CIFAR_MEAN[1])/CIFAR_STD[1]
+        #test_inputs[:,:,:,2]=(test_inputs[:,:,:,2]-CIFAR_MEAN[2])/CIFAR_STD[2]
     else:
         print("First time, creating dataset")
         data = tfds.as_numpy(tfds.load(name=FLAGS.dataset, batch_size=-1, data_dir=DATA_DIR))
@@ -210,7 +233,7 @@ def get_data(seed):
         inputs = (inputs/127.5)-1
         np.save(os.path.join(FLAGS.logdir, "x_train.npy"),inputs)
         np.save(os.path.join(FLAGS.logdir, "y_train.npy"),labels)
-
+    print("inputs shape: " + str(inputs.shape) + ", labels shape: " + str(labels.shape))
     nclass = np.max(labels)+1
 
     np.random.seed(seed)
@@ -240,16 +263,7 @@ def get_data(seed):
 
     train = DataSet.from_arrays(xs, ys,
                                 augment_fn=aug)
-    features_placeholder = tf.placeholder(features.dtype, features.shape)
-    labels_placeholder = tf.placeholder(labels.dtype, labels.shape)
-
-    dataset = tf.data.Dataset.from_tensor_slices((features_placeholder, labels_placeholder))
-    # [Other transformations on `dataset`...]
-    dataset = ...
-    iterator = dataset.make_initializable_iterator()
-
-sess.run(iterator.initializer, feed_dict={features_placeholder: features,
-                                          labels_placeholder: labels})
+    #test = DataSet.from_arrays(test_inputs, test_labels)
     test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
     train = train.cache().shuffle(8192).repeat().parse().augment().batch(FLAGS.batch)
     train = train.nchw().one_hot(nclass).prefetch(16)
@@ -263,6 +277,8 @@ def main(argv):
     print("made it here!")
     print("physical gpu devices: "+ str(tf.config.list_physical_devices('GPU')))
     print("logical gpu devices: "+str(tf.config.list_logical_devices("GPU")))
+    #tf.compat.v1.config.gpu.set_per_process_memory_fraction(0.75)
+    #tf.compat.v1.config.gpu.set_per_process_memory_growth(True)
     seed = FLAGS.seed
     if seed is None:
         import time

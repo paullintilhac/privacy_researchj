@@ -22,6 +22,7 @@ def load_one(base):
     """
     This loads a  logits and converts it to a scored prediction.
     """
+    print("base: " + str(base))
     root = os.path.join(logdir,base,'logits')
     if not os.path.exists(root): return None
 
@@ -59,6 +60,7 @@ def load_one(base):
 
 
 def load_stats():
+    print("dirs: " + str(os.listdir(logdir)))
     with mp.Pool(8) as p:
         p.map(load_one, [x for x in os.listdir(logdir) if 'exp' in x])
 
