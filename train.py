@@ -209,8 +209,8 @@ def get_data(seed):
 
     if os.path.exists(os.path.join(FLAGS.logdir, "x_test.npy")):
         print("using old datasets")
-        inputs = np.load(os.path.join(FLAGS.logdir, "x_test_new.npy"))
-        labels = np.load(os.path.join(FLAGS.logdir, "y_test_new.npy"))
+        inputs = np.load(os.path.join(FLAGS.logdir, "x_test.npy"))
+        labels = np.load(os.path.join(FLAGS.logdir, "y_test.npy"))
         test_inputs = np.load(os.path.join(FLAGS.logdir, "x_test.npy"))
         test_labels = np.load(os.path.join(FLAGS.logdir, "y_test.npy"))
         inputs = inputs/127.5-1
