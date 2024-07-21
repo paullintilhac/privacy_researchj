@@ -354,7 +354,7 @@ if __name__ == '__main__':
     flags.DEFINE_integer('num_experiments', None, 'Number of experiments')
     flags.DEFINE_string('augment', 'weak', 'Strong or weak augmentation')
     flags.DEFINE_integer('only_subset', None, 'Only train on a subset of images.')
-    flags.DEFINE_integer('dataset_size', 50000, 'number of examples to keep.')
+    flags.DEFINE_integer('dataset_size', 10000, 'number of examples to keep.')
     flags.DEFINE_integer('eval_steps', 1, 'how often to get eval accuracy.')
     flags.DEFINE_integer('abort_after_epoch', None, 'stop trainin early at an epoch')
     flags.DEFINE_integer('save_steps', 10, 'how often to get save model.')
