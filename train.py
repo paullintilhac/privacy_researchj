@@ -206,7 +206,8 @@ def get_data(seed):
     """
     DATA_DIR = '/dartfs/rc/lab/C/CybenkoG/TFDS'
     print("dataset name: " + str(FLAGS.dataset))
-    if os.path.exists(os.path.join(FLAGS.logdir, "x_train.npy")):
+
+    if os.path.exists(os.path.join(FLAGS.logdir, "x_test.npy")):
         print("using old datasets")
         inputs = np.load(os.path.join(FLAGS.logdir, "x_test_new.npy"))
         labels = np.load(os.path.join(FLAGS.logdir, "y_test_new.npy"))
