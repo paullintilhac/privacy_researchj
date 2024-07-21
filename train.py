@@ -265,7 +265,10 @@ def get_data(seed):
     train = DataSet.from_arrays(xs, ys,
                                 augment_fn=aug)
     #test = DataSet.from_arrays(test_inputs, test_labels)
-    test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
+    #test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
+    test = DataSet.from_arrays(test_inputs, test_labels,
+                                augment_fn=aug)
+    
     train = train.cache().shuffle(8192).repeat().parse().augment().batch(FLAGS.batch)
     train = train.nchw().one_hot(nclass).prefetch(16)
     test = test.cache().parse().batch(FLAGS.batch).nchw().prefetch(16)
