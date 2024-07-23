@@ -84,7 +84,6 @@ def generate_ours(keep, scores, check_keep, check_scores, in_size=100000, out_si
             print("keep[:,j]: "+str(keep[:,j]) +", scores[keep[:,j],j,:]: "+str(scores[keep[:,j],j,:]))
         dat_in.append(scores[keep[:,j],j,:])
         dat_out.append(scores[~keep[:,j],j,:])
-    print("dat in len: " + str(len(dat_in)) + ", dat_
     in_size = min(min(map(len,dat_in)), in_size)
     out_size = min(min(map(len,dat_out)), out_size)
     print("in size: " + str(in_size) + ", out size: " + str(out_size))

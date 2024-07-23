@@ -155,7 +155,7 @@ if __name__ == '__main__':
     flags.DEFINE_string('dataset', 'cifar10', 'Dataset.')
     flags.DEFINE_string('logdir', 'experiments/', 'Directory where to save checkpoints and tensorboard data.')
     flags.DEFINE_string('regex', '.*experiment.*', 'keep files when matching')
-    flags.DEFINE_integer('dataset_size', 50000, 'size of dataset.')
+    flags.DEFINE_integer('dataset_size', 10000, 'size of dataset.')
     flags.DEFINE_integer('from_epoch', None, 'which epoch to load from.')
     app.run(main)
 
