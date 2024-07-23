@@ -306,7 +306,7 @@ def main(argv):
     else:
         logdir = "experiment-"+str(seed)
     logdir = os.path.join(FLAGS.logdir, logdir)
-
+    print("logdir here: " + str(logdir))
     if os.path.exists(os.path.join(logdir, "ckpt", "%010d.npz"%FLAGS.epochs)):
         print(f"run {FLAGS.expid} already completed.")
         return
