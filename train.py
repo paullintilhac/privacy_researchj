@@ -87,6 +87,7 @@ class TrainLoop(objax.Module):
         with SummaryWriter(os.path.join(logdir, 'tb')) as tensorboard:
             for epoch in range(start_epoch, num_train_epochs):
                 # Train
+                print("epoch: " + str(epoch))
                 summary = Summary()
                 loop = range(0, train_size, self.params.batch)
                 for step in loop:
@@ -318,7 +319,7 @@ def main(argv):
     print(f"starting run {FLAGS.expid}.")
     if not os.path.exists(logdir):
         os.makedirs(logdir)
-
+    print("right before getdata")
     train, test, xs, ys, keep, nclass = get_data(seed)
     print("right after getdata")
     # Define the network and train_it
