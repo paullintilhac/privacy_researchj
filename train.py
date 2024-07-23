@@ -274,7 +274,7 @@ def get_data(seed):
 
     train = train.cache().shuffle(8192).repeat().parse().augment().batch(FLAGS.batch)
     train = train.nchw().one_hot(nclass).prefetch(16)
-    test = test.cache().repeat().parse().batch(FLAGS.batch).nchw().prefetch(16)
+    test = test.cache().parse().batch(FLAGS.batch).nchw().prefetch(16)
 
     return train, test, xs, ys, keep, nclass
 
