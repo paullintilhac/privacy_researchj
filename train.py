@@ -249,7 +249,7 @@ def get_data(seed):
 
     if FLAGS.only_subset is not None:
         keep[FLAGS.only_subset:] = 0
-
+    #change
     xs = inputs[keep]
     ys = labels[keep]
 
