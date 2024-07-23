@@ -265,10 +265,12 @@ def get_data(seed):
     train = DataSet.from_arrays(xs, ys,
                                 augment_fn=aug)
     #test = DataSet.from_arrays(test_inputs, test_labels)
-    #test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
+    test2 = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
+    print("test2 min: " + str(np.min(test2))+ ", test2 min: " + str(np.max(test2)) +", test2 mean: " + str(np.median(test2)))
     test = DataSet.from_arrays(test_inputs, test_labels,
                                 augment_fn=aug)
-    
+    print("test min: " + str(np.min(test))+ ", test min: " + str(np.max(test)) +", test mean: " + str(np.median(test)))
+
     train = train.cache().shuffle(8192).repeat().parse().augment().batch(FLAGS.batch)
     train = train.nchw().one_hot(nclass).prefetch(16)
     test = test.cache().parse().batch(FLAGS.batch).nchw().prefetch(16)
