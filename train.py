@@ -212,8 +212,8 @@ def get_data(seed):
         print("using old datasets")
         inputs = np.load(os.path.join(FLAGS.logdir, "x_test.npy"))
         labels = np.load(os.path.join(FLAGS.logdir, "y_test.npy"))
-        test_inputs = np.load(os.path.join(FLAGS.logdir, "x_test.npy"))
-        test_labels = np.load(os.path.join(FLAGS.logdir, "y_test.npy"))
+        test_inputs = np.load(os.path.join(FLAGS.logdir, "x_train.npy"))[:5000]
+        test_labels = np.load(os.path.join(FLAGS.logdir, "y_train.npy"))[:5000]
         inputs = inputs/127.5-1
         test_inputs=test_inputs/127.5-1
 
@@ -265,8 +265,8 @@ def get_data(seed):
 
     train = DataSet.from_arrays(xs, ys,
                                 augment_fn=aug)
-    ##test = DataSet.from_arrays(test_inputs, test_labels)
-    test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
+    test = DataSet.from_arrays(test_inputs, test_labels)
+    #test = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
     #print("test2[0]: " +str(test2[0]))
     #print("test2 min: " + str(np.min(test2))+ ", test2 min: " + str(np.max(test2)) +", test2 mean: " + str(np.median(test2)))
     #test = DataSet.from_arrays(test_inputs, test_labels)
