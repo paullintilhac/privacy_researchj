@@ -265,7 +265,7 @@ def get_data(seed):
     train = DataSet.from_arrays(xs, ys,
                                 augment_fn=aug)
     #test = DataSet.from_arrays(test_inputs, test_labels)
-    test2 = tfds.as_numpy(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
+    test2 = tfds.as_numpy(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR))
     print("test2 keys: " + str(test2.keys()))
     test2 = test2['test']['image']
     print("test2 min: " + str(np.min(test2))+ ", test2 min: " + str(np.max(test2)) +", test2 mean: " + str(np.median(test2)))
