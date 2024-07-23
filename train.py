@@ -266,7 +266,7 @@ def get_data(seed):
                                 augment_fn=aug)
     #test = DataSet.from_arrays(test_inputs, test_labels)
     test2 = DataSet.from_tfds(tfds.load(name=FLAGS.dataset, split='test', data_dir=DATA_DIR), xs.shape[1:])
-    print("test2 keys: " + str(test2.keys()))
+    print("test2 keys: " + str(test2))
   
     print("test2 min: " + str(np.min(test2))+ ", test2 min: " + str(np.max(test2)) +", test2 mean: " + str(np.median(test2)))
     test = DataSet.from_arrays(test_inputs, test_labels,
