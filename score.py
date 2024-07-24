@@ -66,5 +66,5 @@ def load_stats():
 
 
 logdir = sys.argv[1]
-labels = np.load(os.path.join(logdir,"y_train.npy"))
+labels = np.load(os.path.join(logdir,"y_test.npy"))
 load_stats()
